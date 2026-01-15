@@ -14,6 +14,12 @@
 </div>
 
 ---
+##  Скриншоты
+<img width="1862" height="944" alt="image_2026-01-16_00-02-14" src="https://github.com/user-attachments/assets/a7e48e64-a322-499e-86c8-f4255c1cdbfc" />
+<img width="1855" height="945" alt="image_2026-01-16_00-00-16" src="https://github.com/user-attachments/assets/6560d408-bf63-4eaf-9809-84e40a900a87" />
+<img width="1862" height="944" alt="image_2026-01-16_00-02-14" src="https://github.com/user-attachments/assets/57a60132-746c-4c55-bdf0-1dcd34e36bd1" />
+
+
 
 ## 📋 Описание
 
