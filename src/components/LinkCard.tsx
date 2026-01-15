@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { ExternalLink, MoreHorizontal, Pencil, Trash2, GripVertical, Globe } from 'lucide-react';
 import { Link } from '@/types/link';
 import { getFaviconUrl } from '@/utils/favicon';
+import { useMonitoring } from '@/contexts/LinkMonitorContext';
+import { Sparkline } from '@/components/monitoring/Sparkline';
+import { StatusBadge } from '@/components/monitoring/StatusBadge';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -20,8 +23,12 @@ interface LinkCardProps {
 
 export function LinkCard({ link, onEdit, onDelete, index, dragHandleProps, isDragging }: LinkCardProps) {
     const [imageError, setImageError] = useState(false);
-    // Prefer manual favicon, fallback to auto
     const faviconUrl = link.favicon || getFaviconUrl(link.url);
+
+    // Monitoring
+    const { isEnabled, getHistory, getCurrent } = useMonitoring();
+    const history = getHistory(link.id);
+    const current = getCurrent(link.id);
 
     const handleClick = () => {
         window.open(link.url, '_blank', 'noopener,noreferrer');
@@ -58,9 +65,20 @@ export function LinkCard({ link, onEdit, onDelete, index, dragHandleProps, isDra
                 )}
             </div>
 
-            {/* Title (Centered vertically since URL is gone) */}
-            <div className="flex-1 min-w-0 flex items-center">
+            {/* Title & Monitoring */}
+            <div className="flex-1 min-w-0 flex items-center justify-between gap-3">
                 <h4 className="font-medium text-sm truncate text-foreground">{link.title}</h4>
+
+                {/* Monitoring Display */}
+                {isEnabled && current && (
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                        <Sparkline
+                            data={history.map(h => h.latency)}
+                            status={current.status}
+                        />
+                        <StatusBadge latency={current.latency} status={current.status} />
+                    </div>
+                )}
             </div>
 
             {/* External Link Icon */}

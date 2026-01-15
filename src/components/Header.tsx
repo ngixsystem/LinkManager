@@ -1,5 +1,8 @@
 import { Link2, Plus, Moon, Sun, Settings } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useMonitoring } from '@/contexts/LinkMonitorContext';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { AppSettings } from '@/hooks/useSettings';
 
 interface HeaderProps {
@@ -10,6 +13,7 @@ interface HeaderProps {
 
 export function Header({ onAddGroup, onOpenSettings, settings }: HeaderProps) {
     const [isDark, setIsDark] = useState(false);
+    const { isEnabled, toggleMonitoring } = useMonitoring();
 
     useEffect(() => {
         // Check localStorage first, then DOM
@@ -62,8 +66,21 @@ export function Header({ onAddGroup, onOpenSettings, settings }: HeaderProps) {
                     </div>
                 </div>
 
+
                 {/* Actions */}
                 <div className="flex items-center gap-2">
+                    {/* Monitoring Toggle */}
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-secondary/50">
+                        <Switch
+                            checked={isEnabled}
+                            onCheckedChange={toggleMonitoring}
+                            id="monitoring"
+                        />
+                        <Label htmlFor="monitoring" className="text-sm cursor-pointer">
+                            Live
+                        </Label>
+                    </div>
+
                     <button
                         onClick={onOpenSettings}
                         className="ios-button-ghost p-2.5 rounded-xl"

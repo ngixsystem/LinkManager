@@ -55,7 +55,7 @@ export function useSettings() {
                 }
             })
             .finally(() => {
-                loading = false;
+                setLoading(false);
                 isFirstLoad.current = false;
             });
     }, []);

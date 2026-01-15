@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     DndContext,
     closestCenter,
@@ -16,6 +16,7 @@ import {
 } from '@dnd-kit/sortable';
 import { useLinks } from '@/hooks/useLinks';
 import { useSettings } from '@/hooks/useSettings';
+import { useMonitoring } from '@/contexts/LinkMonitorContext';
 import { LinkGroup, Link } from '@/types/link';
 import { Header } from '@/components/Header';
 import { DraggableGroupCard } from '@/components/DraggableGroupCard';
@@ -25,6 +26,7 @@ import { AddGroupModal } from '@/components/modals/AddGroupModal';
 import { AddLinkModal } from '@/components/modals/AddLinkModal';
 import { DeleteConfirmModal } from '@/components/modals/DeleteConfirmModal';
 import { SettingsModal } from '@/components/modals/SettingsModal';
+import Masonry from 'react-masonry-css';
 
 const Index = () => {
     const {
@@ -41,6 +43,17 @@ const Index = () => {
     } = useLinks();
 
     const { settings, updateSettings, resetSettings } = useSettings();
+    const { isEnabled, updateLinks } = useMonitoring();
+
+    // Send links to monitoring service when enabled or links change
+    useEffect(() => {
+        if (isEnabled && groups.length > 0) {
+            const allLinks = groups.flatMap(group =>
+                group.links.map(link => ({ id: link.id, url: link.url }))
+            );
+            updateLinks(allLinks);
+        }
+    }, [isEnabled, groups, updateLinks]);
 
     // Modal states
     const [groupModalOpen, setGroupModalOpen] = useState(false);
@@ -210,9 +223,15 @@ const Index = () => {
                             items={groups.map((g) => g.id)}
                             strategy={rectSortingStrategy}
                         >
-                            <div className="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4">
+                            <div
+                                className="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-4"
+                                style={{ columnGap: '16px' }}
+                            >
                                 {groups.map((group, index) => (
-                                    <div key={group.id} className="break-inside-avoid">
+                                    <div
+                                        key={group.id}
+                                        className="break-inside-avoid mb-4"
+                                    >
                                         <DraggableGroupCard
                                             group={group}
                                             index={index}
