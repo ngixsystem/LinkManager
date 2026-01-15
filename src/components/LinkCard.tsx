@@ -79,14 +79,14 @@ export function LinkCard({ link, onEdit, onDelete, index, dragHandleProps, isDra
                 <DropdownMenuContent align="end" className="glass-card border-border/50">
                     <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onEdit(link); }} className="gap-2">
                         <Pencil className="w-4 h-4" />
-                        Edit
+                        Редактировать
                     </DropdownMenuItem>
                     <DropdownMenuItem
                         onClick={(e) => { e.stopPropagation(); onDelete(link.id); }}
                         className="gap-2 text-destructive focus:text-destructive"
                     >
                         <Trash2 className="w-4 h-4" />
-                        Delete
+                        Удалить
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

@@ -1,125 +1,141 @@
-import { useState } from 'react';
-import { X } from 'lucide-react';
-import { GROUP_COLORS, GROUP_ICONS, LinkGroup } from '@/types/link';
+import { useState, useEffect } from 'react';
 import { GroupIcon } from '../icons/GroupIcon';
+import { LinkGroup } from '@/types/link';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 interface AddGroupModalProps {
-  open: boolean;
-  onClose: () => void;
-  onSave: (group: Omit<LinkGroup, 'id' | 'links' | 'createdAt' | 'isExpanded'>) => void;
-  editGroup?: LinkGroup | null;
+    open: boolean;
+    onClose: () => void;
+    onSave: (group: Omit<LinkGroup, 'id' | 'links' | 'createdAt' | 'isExpanded'>) => void;
+    editGroup?: LinkGroup | null;
 }
 
+const icons = ['briefcase', 'heart', 'code', 'book', 'gamepad', 'music', 'video', 'coffee', 'home', 'star', 'server', 'cloud', 'shield', 'lock', 'terminal', 'cpu'];
+const colors = [
+    'hsl(211 100% 50%)', // Blue
+    'hsl(292 84% 61%)',  // Purple
+    'hsl(330 80% 60%)',  // Pink
+    'hsl(142 71% 45%)',  // Green
+    'hsl(32 95% 44%)',   // Orange
+    'hsl(0 84% 60%)',    // Red
+    'hsl(190 90% 40%)',  // Cyan
+    'hsl(260 60% 60%)',  // Indigo
+];
+
 export function AddGroupModal({ open, onClose, onSave, editGroup }: AddGroupModalProps) {
-  const [name, setName] = useState(editGroup?.name || '');
-  const [color, setColor] = useState(editGroup?.color || GROUP_COLORS[0].value);
-  const [icon, setIcon] = useState(editGroup?.icon || GROUP_ICONS[0]);
+    const [name, setName] = useState(editGroup?.name || '');
+    const [icon, setIcon] = useState(editGroup?.icon || icons[0]);
+    const [color, setColor] = useState(editGroup?.color || colors[0]);
 
-  const handleSave = () => {
-    if (!name.trim()) return;
-    onSave({ name: name.trim(), color, icon });
-    setName('');
-    setColor(GROUP_COLORS[0].value);
-    setIcon(GROUP_ICONS[0]);
-    onClose();
-  };
+    useEffect(() => {
+        if (editGroup) {
+            setName(editGroup.name);
+            setIcon(editGroup.icon);
+            setColor(editGroup.color);
+        } else {
+            setName('');
+            setIcon(icons[0]);
+            setColor(colors[0]);
+        }
+    }, [editGroup, open]);
 
-  const handleOpenChange = (open: boolean) => {
-    if (!open) {
-      setName('');
-      setColor(GROUP_COLORS[0].value);
-      setIcon(GROUP_ICONS[0]);
-      onClose();
-    }
-  };
+    const handleSave = () => {
+        if (!name.trim()) return;
+        onSave({ name, icon, color });
+        handleClose();
+    };
 
-  return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="glass-card-elevated border-border/50 max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-semibold">
-            {editGroup ? 'Edit Group' : 'New Group'}
-          </DialogTitle>
-        </DialogHeader>
+    const handleClose = () => {
+        setName('');
+        setIcon(icons[0]);
+        setColor(colors[0]);
+        onClose();
+    };
 
-        <div className="space-y-6 pt-4">
-          {/* Name Input */}
-          <div className="space-y-2">
-            <Label htmlFor="group-name" className="text-sm font-medium">
-              Name
-            </Label>
-            <Input
-              id="group-name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Enter group name"
-              className="h-12 rounded-xl bg-secondary/50 border-0 focus-visible:ring-2 focus-visible:ring-primary"
-              autoFocus
-            />
-          </div>
+    return (
+        <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
+            <DialogContent className="glass-card-elevated border-border/50 max-w-md">
+                <DialogHeader>
+                    <DialogTitle className="text-xl font-semibold">
+                        {editGroup ? 'Редактировать группу' : 'Добавить группу'}
+                    </DialogTitle>
+                </DialogHeader>
 
-          {/* Color Selection */}
-          <div className="space-y-2">
-            <Label className="text-sm font-medium">Color</Label>
-            <div className="flex flex-wrap gap-2">
-              {GROUP_COLORS.map((c) => (
-                <button
-                  key={c.value}
-                  onClick={() => setColor(c.value)}
-                  className={`w-10 h-10 rounded-xl transition-all duration-200 ${
-                    color === c.value
-                      ? 'ring-2 ring-offset-2 ring-offset-background scale-110'
-                      : 'hover:scale-105'
-                  }`}
-                  style={{ 
-                    backgroundColor: c.value,
-                    boxShadow: color === c.value ? `0 4px 12px ${c.value}40` : undefined
-                  }}
-                  aria-label={c.name}
-                />
-              ))}
-            </div>
-          </div>
+                <div className="space-y-6 pt-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="group-name" className="text-sm font-medium">
+                            Название группы
+                        </Label>
+                        <Input
+                            id="group-name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="Введите название"
+                            className="h-12 rounded-xl bg-secondary/50 border-0 focus-visible:ring-2 focus-visible:ring-primary"
+                            autoFocus
+                        />
+                    </div>
 
-          {/* Icon Selection */}
-          <div className="space-y-2">
-            <Label className="text-sm font-medium">Icon</Label>
-            <div className="flex flex-wrap gap-2">
-              {GROUP_ICONS.map((i) => (
-                <button
-                  key={i}
-                  onClick={() => setIcon(i)}
-                  className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 ${
-                    icon === i
-                      ? 'bg-primary text-primary-foreground scale-110 shadow-ios-md'
-                      : 'bg-secondary hover:bg-accent hover:scale-105'
-                  }`}
-                  aria-label={i}
-                >
-                  <GroupIcon icon={i} className="w-5 h-5" />
-                </button>
-              ))}
-            </div>
-          </div>
+                    <div className="space-y-2">
+                        <Label className="text-sm font-medium">Иконка</Label>
+                        <div className="grid grid-cols-8 gap-2 p-1">
+                            {icons.map((i) => (
+                                <button
+                                    key={i}
+                                    onClick={() => setIcon(i)}
+                                    className={`p-2 rounded-lg transition-all ${icon === i
+                                            ? 'bg-primary text-primary-foreground scale-110 shadow-ios-sm'
+                                            : 'hover:bg-secondary text-muted-foreground'
+                                        }`}
+                                >
+                                    <GroupIcon icon={i} className="w-5 h-5 mx-auto" />
+                                </button>
+                            ))}
+                        </div>
+                    </div>
 
-          {/* Save Button */}
-          <button
-            onClick={handleSave}
-            disabled={!name.trim()}
-            className="w-full ios-button-primary h-12 text-base disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {editGroup ? 'Save Changes' : 'Create Group'}
-          </button>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
+                    <div className="space-y-2">
+                        <Label className="text-sm font-medium">Цвет</Label>
+                        <div className="grid grid-cols-8 gap-2 p-1">
+                            {colors.map((c) => (
+                                <button
+                                    key={c}
+                                    onClick={() => setColor(c)}
+                                    className={`w-8 h-8 rounded-full transition-all ${color === c
+                                            ? 'ring-2 ring-offset-2 ring-primary scale-110 shadow-ios-sm'
+                                            : 'hover:scale-110'
+                                        }`}
+                                    style={{ backgroundColor: c }}
+                                />
+                            ))}
+                        </div>
+                    </div>
+
+                    <DialogFooter className="gap-2 sm:gap-0">
+                        <button
+                            onClick={onClose}
+                            className="ios-button-secondary h-12 flex-1"
+                        >
+                            Отмена
+                        </button>
+                        <button
+                            onClick={handleSave}
+                            disabled={!name.trim()}
+                            className="ios-button-primary h-12 flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {editGroup ? 'Сохранить' : 'Создать'}
+                        </button>
+                    </DialogFooter>
+                </div>
+            </DialogContent>
+        </Dialog>
+    );
 }

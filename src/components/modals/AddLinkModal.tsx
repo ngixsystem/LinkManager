@@ -28,7 +28,6 @@ export function AddLinkModal({ open, onClose, onSave, editLink }: AddLinkModalPr
         if (url && isValidUrl(ensureProtocol(url))) {
             const faviconUrl = getFaviconUrl(ensureProtocol(url));
             // Only auto-set if favicon is empty or was auto-set previously (heuristic: contains google)
-            // Actually, simplest is to just set it, users can override below.
             if (!favicon || favicon.includes('google.com')) {
                 setFavicon(faviconUrl);
                 setFaviconError(false);
@@ -72,7 +71,7 @@ export function AddLinkModal({ open, onClose, onSave, editLink }: AddLinkModalPr
             <DialogContent className="glass-card-elevated border-border/50 max-w-md">
                 <DialogHeader>
                     <DialogTitle className="text-xl font-semibold">
-                        {editLink ? 'Edit Link' : 'Add Link'}
+                        {editLink ? 'Редактировать ссылку' : 'Добавить ссылку'}
                     </DialogTitle>
                 </DialogHeader>
 
@@ -93,7 +92,7 @@ export function AddLinkModal({ open, onClose, onSave, editLink }: AddLinkModalPr
                         </div>
                         <div className="flex-1 min-w-0">
                             <p className="font-medium truncate text-foreground">
-                                {title || 'Link title'}
+                                {title || 'Название ссылки'}
                             </p>
                             <p className="text-sm text-muted-foreground truncate">
                                 {url || 'https://example.com'}
@@ -104,13 +103,13 @@ export function AddLinkModal({ open, onClose, onSave, editLink }: AddLinkModalPr
                     {/* Title Input */}
                     <div className="space-y-2">
                         <Label htmlFor="link-title" className="text-sm font-medium">
-                            Title
+                            Название
                         </Label>
                         <Input
                             id="link-title"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
-                            placeholder="Enter link title"
+                            placeholder="Введите название"
                             className="h-12 rounded-xl bg-secondary/50 border-0 focus-visible:ring-2 focus-visible:ring-primary"
                             autoFocus
                         />
@@ -134,7 +133,7 @@ export function AddLinkModal({ open, onClose, onSave, editLink }: AddLinkModalPr
                     {/* Favicon Input */}
                     <div className="space-y-2">
                         <Label htmlFor="link-favicon" className="text-sm font-medium">
-                            Custom Icon URL (Optional)
+                            URL иконки (необязательно)
                         </Label>
                         <Input
                             id="link-favicon"
@@ -154,7 +153,7 @@ export function AddLinkModal({ open, onClose, onSave, editLink }: AddLinkModalPr
                         disabled={!title.trim() || !url.trim()}
                         className="w-full ios-button-primary h-12 text-base disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {editLink ? 'Save Changes' : 'Add Link'}
+                        {editLink ? 'Сохранить' : 'Добавить'}
                     </button>
                 </div>
             </DialogContent>

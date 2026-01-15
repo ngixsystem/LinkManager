@@ -97,7 +97,7 @@ export function GroupCard({
                     <button
                         onClick={() => onAddLink(group.id)}
                         className="ios-button-ghost p-2 rounded-xl"
-                        aria-label="Add link"
+                        aria-label="Добавить ссылку"
                     >
                         <Plus className="w-5 h-5 text-primary" />
                     </button>
@@ -111,14 +111,14 @@ export function GroupCard({
                         <DropdownMenuContent align="end" className="glass-card border-border/50">
                             <DropdownMenuItem onClick={() => onEdit(group)} className="gap-2">
                                 <Pencil className="w-4 h-4" />
-                                Edit Group
+                                Редактировать группу
                             </DropdownMenuItem>
                             <DropdownMenuItem
                                 onClick={() => onDelete(group.id)}
                                 className="gap-2 text-destructive focus:text-destructive"
                             >
                                 <Trash2 className="w-4 h-4" />
-                                Delete Group
+                                Удалить группу
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -139,7 +139,7 @@ export function GroupCard({
                     <div className={`px-4 pb-4 space-y-2`}>
                         {group.links.length === 0 ? (
                             <div className="text-center py-6 text-muted-foreground text-sm">
-                                No links yet. Click + to add one.
+                                Ссылок нет. Нажмите +, чтобы добавить.
                             </div>
                         ) : (
                             <SortableContext items={group.links.map(l => l.id)} strategy={verticalListSortingStrategy}>

@@ -87,7 +87,7 @@ export function Header({ onAddGroup, onOpenSettings, settings }: HeaderProps) {
                         className="ios-button-primary gap-2"
                     >
                         <Plus className="w-5 h-5" />
-                        <span className="hidden sm:inline">New Group</span>
+                        <span className="hidden sm:inline">Новая группа</span>
                     </button>
                 </div>
             </div>
